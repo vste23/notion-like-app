@@ -1,0 +1,26 @@
+.main-wrap {
+    box-shadow: none !important;
+}
+
+.parent-block {
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.sub-icon {
+    opacity: 0;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.inner-button-wrap {
+    display: flex;
+    justify-content: flex-end;
+    height: 50px;
+}
+
+.parent-block:hover .sub-icon {
+    opacity: 1;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}

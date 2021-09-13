@@ -1,3 +1,14 @@
 .editor {
     width: 100%;
+    cursor: text;
+}
+
+.st-toolbar {
+    position: absolute;
+    z-index: 1;
+    top: -10000px;
+    left: -10000px;
+    margin-top: -6px;
+    opacity: 0;
+    transition: opacity 0.75s;
 }

@@ -9,24 +9,15 @@ import FormatBoldIcon from "@material-ui/icons/FormatBold";
 import { Range } from "slate";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
-import { css } from "@emotion/css";
 
-const CustomEditor = () => {
+const CustomEditor = ({text, setText}) => {
   const editor = useMemo(() => withReact(createEditor()), []);
-  const [value, setValue] = useState([
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ]);
 
   return (
     <Slate
       editor={editor}
-      value={value}
-      onChange={(newValue) => {
-        setValue(newValue);
-      }}
+      value={text}
+      onChange={(v) => setText(v)}
       onDOMBeforeInput={(event: InputEvent) => {
         event.preventDefault();
         switch (event.inputType) {
@@ -36,13 +27,16 @@ const CustomEditor = () => {
             return toggleFormat(editor, "italic");
           case "formatUnderline":
             return toggleFormat(editor, "underline");
-          default: return null
+          default:
+            return null;
         }
       }}
     >
       <HoveringToolbar />
-      <Editable className={"editor"} placeholder="Enter some text..."
-                renderLeaf={(props) => <Leaf {...props} />}
+      <Editable
+        className={"editor"}
+        placeholder="Enter some text..."
+        renderLeaf={(props) => <Leaf {...props} />}
       />
     </Slate>
   );
@@ -85,6 +79,7 @@ const HoveringToolbar = () => {
   const ref = useRef();
   const editor = useSlate();
   const { selection } = editor;
+
   useEffect(() => {
     const el = ref.current;
 
@@ -113,33 +108,8 @@ const HoveringToolbar = () => {
   });
 
   return (
-    <Paper
-      ref={ref}
-      className={css`
-        position: absolute;
-        z-index: 1;
-        top: -10000px;
-        left: -10000px;
-        margin-top: -6px;
-        opacity: 0;
-        transition: opacity 0.75s;
-      `}
-    >
-      {/* <button
-            style={{
-              cursor: "pointer",
-              color: isFormatActive(editor, "bold") ? "white" : "black"
-            }}
-            onMouseDown={(event) => {
-              event.preventDefault();
-              toggleFormat(editor, "bold");
-            }}
-          >
-            B
-          </button> */}
-
+    <Paper ref={ref} className={"st-toolbar"}>
       <ToggleButtonGroup
-        // value={formatList}
         aria-label="text formatting"
         onChange={(event, newFormats) => {
           toggleFormat(editor, newFormats);

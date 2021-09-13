@@ -7,7 +7,7 @@ import {Draggable} from "react-beautiful-dnd";
 import Editor from '../editor/Editor';
 import {CardActions} from "@material-ui/core";
 
-const InnerCard = ({id, index}) => {
+const InnerCard = ({id, index, text, setText}) => {
     return (
         <Draggable draggableId={`${id}`} index={index}>
             {(provided) => (
@@ -17,7 +17,7 @@ const InnerCard = ({id, index}) => {
                       {...provided.dragHandleProps}
                 >
                     <CardContent className={'inner-content'}>
-                        <Editor/>
+                        <Editor text={text} setText={setText} />
                         <CardActions className={'drag-icon'}>
                             <DragIndicatorIcon/>
                         </CardActions>

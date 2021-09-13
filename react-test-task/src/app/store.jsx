@@ -1,5 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
+import blocksReducer from './reducers/blocksReducer';
 
 export const store = configureStore({
-    reducer: {},
-})
+    reducer: {
+        blocks: blocksReducer
+    },
+});
+
