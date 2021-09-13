@@ -1,0 +1,12 @@
+.inner-card {
+    margin-top: 1em;
+}
+
+.inner-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.drag-icon {
+    cursor: pointer;
+}
