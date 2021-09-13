@@ -1,12 +1,12 @@
 import "./CardBlock.css";
-import React, { useState } from "react";
+import React from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { CardHeader, IconButton } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
-import { getBlocks, reorder } from "../../common/utils";
+import { reorder } from "../../common/utils";
 import InnerCard from "../inner-card/InnerCard";
 import { setBlocks } from "../../app/reducers/blocksReducer";
 import uniqid from "uniqid";

@@ -1,5 +1,5 @@
 import "./Editor.css";
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import { Editor, Transforms, Text, createEditor } from "slate";
 import { Slate, Editable, ReactEditor, withReact, useSlate } from "slate-react";
 import Paper from "@material-ui/core/Paper";
