@@ -10,3 +10,17 @@ export const reorder = (list, startIndex, endIndex) => {
 
     return result;
 };
+
+export const deleteElement = (list, startIndex) => {
+    const result = Array.from(list);
+    result.splice(startIndex, 1);
+
+    return result;
+};
+
+export const insertElement = (list, startIndex, element) => {
+    const result = Array.from(list);
+    result.splice(startIndex, 0, element);
+
+    return result;
+};

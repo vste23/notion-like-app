@@ -6,7 +6,7 @@ import { CardHeader, IconButton } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
-import { reorder } from "../../common/utils";
+import { deleteElement, reorder, insertElement } from "../../common/utils";
 import InnerCard from "../inner-card/InnerCard";
 import { setBlocks } from "../../app/reducers/blocksReducer";
 import uniqid from "uniqid";
@@ -22,22 +22,20 @@ const CardBlock = () => {
     const { source, destination } = result;
 
     if (!destination) {
-        return;
-    }
-
-    if (source.droppableId !== destination.droppableId) {
-        return;
-    }
-
-    const sInd = +source.droppableId;
-    const dInd = +destination.droppableId;
-
-    if (sInd !== dInd) {
       return;
     }
 
-    const items = reorder(blocks[sInd].blocks, source.index, destination.index);
-    const newBlocks = blocks.map((b, id) =>
+    let newBlocks = null;
+    const sInd = +source.droppableId;
+    const dInd = +destination.droppableId;
+
+    if (sInd === dInd) {
+      const items = reorder(
+        blocks[sInd].blocks,
+        source.index,
+        destination.index
+      );
+      newBlocks = blocks.map((b, id) =>
         id === sInd
           ? {
               ...b,
@@ -45,16 +43,60 @@ const CardBlock = () => {
             }
           : b
       );
-    
+    } else {
+      // source editing
+      const sItems = deleteElement(blocks[sInd].blocks, source.index);
+      if (sItems.length < 1) {
+        newBlocks = blocks.filter((b) => b.id != blocks[sInd].id);
+      } else {
+        newBlocks = blocks.map((b, id) =>
+          id === sInd
+            ? {
+                ...b,
+                blocks: sItems,
+              }
+            : b
+        );
+      }
+
+      // dest editing
+      const destItems = insertElement(
+        blocks[dInd].blocks,
+        destination.index,
+        blocks[sInd].blocks[source.index]
+      );
+      newBlocks = newBlocks.map((b, id) =>
+        id === dInd
+          ? {
+              ...b,
+              blocks: destItems,
+            }
+          : b
+      );
+    }
+
     dispatch(setBlocks(newBlocks));
   };
 
   const addNewBlock = () => {
-    return dispatch(setBlocks([...blocks, { id: uniqid(), blocks: [] }]));
+    return dispatch(
+      setBlocks([
+        ...blocks,
+        {
+          id: uniqid(),
+          blocks: [
+            {
+              id: uniqid(),
+              text: [{ type: "paragraph", children: [{ text: "" }] }],
+            },
+          ],
+        },
+      ])
+    );
   };
 
   const addNewChildBlock = (pId) => {
-    const newBlocks = blocks.map(b =>
+    const newBlocks = blocks.map((b) =>
       b.id === pId
         ? {
             ...b,
@@ -62,7 +104,7 @@ const CardBlock = () => {
               ...b.blocks,
               {
                 id: uniqid(),
-                text: [{type: "paragraph", children: [{text: ""}]}],
+                text: [{ type: "paragraph", children: [{ text: "" }] }],
               },
             ],
           }
@@ -72,14 +114,18 @@ const CardBlock = () => {
   };
 
   const setTextValue = (pId, cId, text) => {
-    const newBlocks = blocks.map(b =>
+    const newBlocks = blocks.map((b) =>
       b.id === pId
         ? {
             ...b,
-            blocks: b.blocks.map(bc => bc.id === cId ? {
-                ...bc,
-                text: text
-            }: bc)
+            blocks: b.blocks.map((bc) =>
+              bc.id === cId
+                ? {
+                    ...bc,
+                    text: text,
+                  }
+                : bc
+            ),
           }
         : b
     );
@@ -116,7 +162,13 @@ const CardBlock = () => {
                     </IconButton>
                   </div>
                   {el.blocks.map((b, i) => (
-                    <InnerCard key={b.id} id={b.id} index={i} text={b.text} setText={(text) => setTextValue(el.id, b.id, text)} />
+                    <InnerCard
+                      key={b.id}
+                      id={b.id}
+                      index={i}
+                      text={b.text}
+                      setText={(text) => setTextValue(el.id, b.id, text)}
+                    />
                   ))}
                   {provided.placeholder}
                 </Card>
