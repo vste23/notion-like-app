@@ -47,7 +47,7 @@ const CardBlock = () => {
       // source editing
       const sItems = deleteElement(blocks[sInd].blocks, source.index);
       if (sItems.length < 1) {
-        newBlocks = blocks.filter((b) => b.id != blocks[sInd].id);
+        newBlocks = blocks.filter((b) => b.id !== blocks[sInd].id);
       } else {
         newBlocks = blocks.map((b, id) =>
           id === sInd
